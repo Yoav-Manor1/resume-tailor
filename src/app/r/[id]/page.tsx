@@ -96,20 +96,20 @@ export default async function ResultPage({
 
   return (
     <main className="fade-up">
-      <header className="flex flex-wrap items-end justify-between gap-6 border-b border-neutral-200 pb-6">
-        <div>
+      <header className="flex flex-wrap items-end justify-between gap-8 border-b border-neutral-200 pb-8">
+        <div className="min-w-0">
           <p className="text-xs font-medium uppercase tracking-wider text-neutral-500">
             Tailored for
           </p>
-          <h1 className="mt-1 text-3xl font-semibold tracking-tightish text-neutral-900">
+          <h1 className="mt-2 text-balance text-3xl font-semibold leading-tight tracking-tightish text-neutral-900 sm:text-4xl">
             {tailored.job_title}
           </h1>
           {tailored.job_company && (
-            <p className="mt-1 text-neutral-600">{tailored.job_company}</p>
+            <p className="mt-2 text-neutral-600">{tailored.job_company}</p>
           )}
         </div>
-        <div className="text-right">
-          <div className="flex items-baseline gap-1">
+        <div className="flex-none text-right">
+          <div className="flex items-baseline justify-end gap-1">
             <span
               className={`text-5xl font-semibold tracking-tightish ${scoreColor(tailored.match_score)}`}
             >
@@ -123,11 +123,11 @@ export default async function ResultPage({
         </div>
       </header>
 
-      <section className="mt-8">
+      <section className="mt-10">
         <h2 className="text-xs font-medium uppercase tracking-wider text-neutral-500">
           Keywords
         </h2>
-        <div className="mt-3">
+        <div className="mt-4">
           <KeywordChips
             matched={tailored.matched_keywords}
             missing={tailored.missing_keywords}
@@ -135,7 +135,7 @@ export default async function ResultPage({
         </div>
       </section>
 
-      <section className="mt-10">
+      <section className="mt-14">
         <BulletDiff bullets={tailored.bullets} skeleton={tailored.resume_skeleton} />
       </section>
 

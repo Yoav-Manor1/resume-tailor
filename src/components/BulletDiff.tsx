@@ -34,37 +34,48 @@ export function BulletDiff({
 
   let index = 0
   return (
-    <div className="space-y-10">
+    <div className="space-y-12">
       {[...groups.entries()].map(([expId, items]) => {
         const exp = expById.get(expId)
         return (
           <section key={expId}>
-            <div className="flex items-baseline justify-between">
-              <h3 className="text-sm font-semibold tracking-tightish text-neutral-900">
+            <div className="flex items-baseline justify-between gap-4">
+              <h3 className="text-base font-semibold tracking-tightish text-neutral-900">
                 {exp ? `${exp.company} — ${exp.role}` : 'Experience'}
               </h3>
               {exp?.dates && (
-                <span className="text-xs text-neutral-500">{exp.dates}</span>
+                <span className="flex-none text-xs text-neutral-500">
+                  {exp.dates}
+                </span>
               )}
             </div>
-            <div className="mt-3 overflow-hidden rounded-xl border border-neutral-200 bg-white shadow-soft">
-              <div className="grid grid-cols-2 border-b border-neutral-200 bg-neutral-50 text-[10px] font-semibold uppercase tracking-wider text-neutral-500">
-                <div className="px-5 py-2">Original</div>
-                <div className="border-l border-neutral-200 px-5 py-2">Tailored</div>
-              </div>
+            <div className="mt-4 overflow-hidden rounded-xl border border-neutral-200 bg-white shadow-soft">
               <div className="divide-y divide-neutral-200">
                 {items.map((b) => {
                   const i = index++
                   return (
                     <div
                       key={i}
-                      className="grid grid-cols-2 divide-x divide-neutral-200"
+                      className="grid grid-cols-1 gap-x-8 gap-y-5 px-7 py-6 md:grid-cols-2"
                     >
-                      <p className="px-5 py-4 text-sm leading-relaxed text-neutral-500">
-                        {b.original}
-                      </p>
-                      <div className="group/cell relative px-5 py-4 text-sm leading-relaxed">
-                        <p>{highlight(b.tailored, b.matched_keywords)}</p>
+                      {/* Original */}
+                      <div>
+                        <p className="text-[10px] font-semibold uppercase tracking-wider text-neutral-400">
+                          Original
+                        </p>
+                        <p className="mt-2 text-[15px] leading-7 text-neutral-500">
+                          {b.original}
+                        </p>
+                      </div>
+
+                      {/* Tailored */}
+                      <div className="group/cell relative md:border-l md:border-neutral-100 md:pl-8">
+                        <p className="text-[10px] font-semibold uppercase tracking-wider text-accent">
+                          Tailored
+                        </p>
+                        <p className="mt-2 text-[15px] leading-7 text-neutral-900">
+                          {highlight(b.tailored, b.matched_keywords)}
+                        </p>
                         <button
                           type="button"
                           onClick={() => {
@@ -75,7 +86,7 @@ export function BulletDiff({
                               1500,
                             )
                           }}
-                          className="absolute right-3 top-3 inline-flex items-center gap-1 rounded-md border border-neutral-200 bg-white px-2 py-0.5 text-[11px] font-medium text-neutral-600 opacity-0 shadow-sm transition group-hover/cell:opacity-100 hover:text-neutral-900"
+                          className="absolute right-0 top-0 inline-flex items-center gap-1 rounded-md border border-neutral-200 bg-white px-2 py-0.5 text-[11px] font-medium text-neutral-600 opacity-0 shadow-sm transition group-hover/cell:opacity-100 hover:text-neutral-900"
                         >
                           {copied === i ? (
                             <>
