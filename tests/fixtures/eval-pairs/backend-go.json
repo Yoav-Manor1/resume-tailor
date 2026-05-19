@@ -1,0 +1,5 @@
+{
+  "name": "backend-go",
+  "resume": "Jane Doe\nFoo Corp — Senior Engineer (2022–Present)\n• Built backend services in Python.\n• Worked on the data pipeline.\nSkills: Python, Postgres, Docker",
+  "jd": "We are hiring a Senior Backend Engineer. You will write Go services on Kubernetes, design Postgres schemas, and ship gRPC APIs. Bonus: Kafka."
+}
