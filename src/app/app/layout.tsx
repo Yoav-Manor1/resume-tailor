@@ -13,9 +13,9 @@ export default async function AppLayout({
         <div className="mx-auto flex max-w-5xl items-center justify-between px-6 py-3.5">
           <Link
             href="/app"
-            className="text-sm font-semibold tracking-tightish text-neutral-900"
+            className="text-xl font-semibold tracking-tightish text-neutral-900"
           >
-            Resume<span className="text-accent">.tailor</span>
+            tailor<span className="text-accent">CV</span>
           </Link>
           <nav className="flex items-center gap-1 text-sm">
             <Link
