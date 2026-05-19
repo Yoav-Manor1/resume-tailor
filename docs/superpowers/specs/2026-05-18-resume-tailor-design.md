@@ -116,17 +116,42 @@ const TailoredOutput = z.object({
   matched_keywords: z.array(z.string()),
   missing_keywords: z.array(z.string()),
   bullets: z.array(z.object({
-    section:          z.string(),               // e.g. "Experience — Acme, Senior Eng"
+    experience_id:    z.string(),               // FK into resume_skeleton.experience[].id
     original:         z.string(),
     tailored:         z.string(),
     matched_keywords: z.array(z.string()),      // JD keywords now present in the rewrite
   })),
+  // Captured once at tailor time so PDF export is deterministic and doesn't need a second LLM call.
+  resume_skeleton: z.object({
+    name:    z.string(),
+    contact: z.object({
+      email: z.string().optional(),
+      phone: z.string().optional(),
+      location: z.string().optional(),
+      links: z.array(z.string()).default([]),    // LinkedIn, portfolio, GitHub
+    }),
+    summary: z.string().optional(),
+    experience: z.array(z.object({
+      id:       z.string(),                      // stable id used by bullets[].experience_id
+      company:  z.string(),
+      role:     z.string(),
+      dates:    z.string(),
+    })),
+    skills:    z.array(z.string()).default([]),
+    education: z.array(z.object({
+      school: z.string(),
+      degree: z.string().optional(),
+      dates:  z.string().optional(),
+    })).default([]),
+  }),
 })
 ```
 
+The `bullets[]` and `resume_skeleton.experience[]` are joined by `experience_id` so the diff view can group bullets by job, and the PDF template can inline each bullet under its experience entry without ambiguity.
+
 ## Tailoring pipeline (`POST /api/tailor`)
 
-Node runtime, returns `text/event-stream`. One JSON object per line.
+Node runtime, returns `application/x-ndjson`. One JSON object per line.
 
 ```ts
 export async function POST(req) {
@@ -195,7 +220,7 @@ During streaming (`status='pending'`), the page renders a checklist UI driven by
 
 ## PDF export (`POST /api/tailorings/[id]/pdf`)
 
-Lazy. On first call, reconstructs a minimal resume JSON from `resume_text` + tailored bullets, renders via `<ResumeTemplate data={...} />`, uploads to `tailored/${user_id}/${id}.pdf`, writes `tailored_pdf_path`, returns a signed URL. On subsequent calls, returns the existing signed URL.
+Lazy. On first call, reads `tailored.resume_skeleton` + `tailored.bullets`, renders via `<ResumeTemplate data={...} />` (the template joins bullets onto their experience by `experience_id`), uploads to `tailored/${user_id}/${id}.pdf`, writes `tailored_pdf_path`, returns a signed URL. On subsequent calls, returns the existing signed URL — no second LLM call ever.
 
 **Template** (`components/ResumeTemplate.tsx`): one file, single column, ATS-friendly. One typeface (Inter via `Font.register`), three sizes (name 22pt / section 11pt bold / body 10pt), generous whitespace. Sections fixed: Name + contact / Summary / Experience / Skills / Education.
 
