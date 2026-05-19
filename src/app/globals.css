@@ -1,0 +1,7 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root { color-scheme: light; }
+body { @apply bg-white text-neutral-900 antialiased; }
+mark { @apply bg-yellow-100 text-neutral-900 rounded px-0.5; }
