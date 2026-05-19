@@ -5,6 +5,7 @@ import { BulletDiff } from '@/components/BulletDiff'
 import { KeywordChips } from '@/components/KeywordChips'
 import { ERROR_MESSAGES, type ErrorSlug } from '@/lib/errors'
 import { DownloadPdfButton } from './download-pdf-button'
+import { CopyAllButton } from './copy-all-button'
 
 function scoreColor(score: number) {
   if (score >= 80) return 'text-emerald-600'
@@ -138,7 +139,18 @@ export default async function ResultPage({
         <BulletDiff bullets={tailored.bullets} skeleton={tailored.resume_skeleton} />
       </section>
 
-      <DownloadPdfButton id={id} />
+      <div className="mt-12 flex flex-wrap items-center justify-between gap-4 border-t border-neutral-200 pt-6">
+        <p className="text-xs text-neutral-500">
+          Paste these bullets into your own resume — or grab a quick PDF.
+        </p>
+        <div className="flex items-center gap-2">
+          <CopyAllButton
+            bullets={tailored.bullets}
+            skeleton={tailored.resume_skeleton}
+          />
+          <DownloadPdfButton id={id} />
+        </div>
+      </div>
     </main>
   )
 }

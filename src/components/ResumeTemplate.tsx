@@ -4,24 +4,73 @@ import type { Bullet, ResumeSkeleton } from '@/lib/schema'
 // Use react-pdf's bundled Helvetica — no external font fetch at render time,
 // so PDF generation works fully offline and never fails on network hiccups.
 const s = StyleSheet.create({
-  page: { padding: 48, fontFamily: 'Helvetica', fontSize: 10, color: '#111' },
-  name: { fontSize: 22, fontFamily: 'Helvetica-Bold' },
-  contact: { fontSize: 10, color: '#555', marginTop: 4 },
-  section: {
-    fontSize: 11,
-    fontFamily: 'Helvetica-Bold',
-    marginTop: 18,
-    marginBottom: 6,
-    textTransform: 'uppercase',
-    letterSpacing: 1,
+  page: {
+    paddingTop: 40,
+    paddingBottom: 36,
+    paddingHorizontal: 54,
+    fontFamily: 'Helvetica',
+    fontSize: 10,
+    color: '#111',
+    lineHeight: 1.35,
   },
-  expRow: { flexDirection: 'row', justifyContent: 'space-between', marginTop: 8 },
-  expName: { fontSize: 11, fontFamily: 'Helvetica-Bold' },
-  expDates: { fontSize: 10, color: '#555' },
-  bullet: { marginTop: 3, marginLeft: 10 },
-  summary: { marginTop: 4, lineHeight: 1.4 },
-  skillsLine: { marginTop: 4, lineHeight: 1.4 },
-  eduRow: { flexDirection: 'row', justifyContent: 'space-between', marginTop: 6 },
+
+  // Header
+  name: {
+    fontSize: 20,
+    fontFamily: 'Helvetica-Bold',
+    textAlign: 'center',
+    letterSpacing: 0.3,
+  },
+  contact: {
+    marginTop: 4,
+    fontSize: 9.5,
+    color: '#222',
+    textAlign: 'center',
+  },
+
+  // Section rule + heading
+  section: {
+    marginTop: 16,
+    paddingBottom: 2,
+    borderBottomWidth: 0.75,
+    borderBottomColor: '#111',
+    fontSize: 10.5,
+    fontFamily: 'Helvetica-Bold',
+    letterSpacing: 1.2,
+    textTransform: 'uppercase',
+  },
+
+  // Two-column "title left, dates right" row
+  rowJustify: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'baseline',
+    marginTop: 8,
+  },
+  titleLeft: { fontFamily: 'Helvetica-Bold', fontSize: 10.5 },
+  titleRight: { fontSize: 9.5, color: '#222' },
+
+  roleLine: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'baseline',
+    marginTop: 1,
+  },
+  roleLeft: { fontFamily: 'Helvetica-Oblique', fontSize: 10 },
+
+  // Bullets
+  bulletRow: {
+    flexDirection: 'row',
+    marginTop: 3,
+    paddingLeft: 4,
+  },
+  bulletDot: { width: 10 },
+  bulletText: { flex: 1, fontSize: 10 },
+
+  // Summary / education / skills text
+  paragraph: { marginTop: 4, fontSize: 10 },
+  skillsLine: { marginTop: 4, fontSize: 10 },
+  skillsLabel: { fontFamily: 'Helvetica-Bold' },
 })
 
 export function ResumeTemplate({
@@ -37,60 +86,73 @@ export function ResumeTemplate({
     arr.push(b)
     byExp.set(b.experience_id, arr)
   }
+
   const contactParts = [
     skeleton.contact.email,
     skeleton.contact.phone,
     skeleton.contact.location,
     ...skeleton.contact.links,
-  ].filter(Boolean)
+  ].filter(Boolean) as string[]
 
   return (
     <Document>
       <Page size="LETTER" style={s.page}>
+        {/* Header */}
         <Text style={s.name}>{skeleton.name}</Text>
-        <Text style={s.contact}>{contactParts.join('  ·  ')}</Text>
+        {contactParts.length > 0 && (
+          <Text style={s.contact}>{contactParts.join('  •  ')}</Text>
+        )}
 
+        {/* Summary (optional) */}
         {skeleton.summary && (
           <>
             <Text style={s.section}>Summary</Text>
-            <Text style={s.summary}>{skeleton.summary}</Text>
+            <Text style={s.paragraph}>{skeleton.summary}</Text>
           </>
         )}
 
+        {/* Experience */}
         <Text style={s.section}>Experience</Text>
-        {skeleton.experience.map((exp) => (
-          <View key={exp.id}>
-            <View style={s.expRow}>
-              <Text style={s.expName}>
-                {exp.company} — {exp.role}
-              </Text>
-              <Text style={s.expDates}>{exp.dates}</Text>
+        {skeleton.experience.map((exp) => {
+          const expBullets = byExp.get(exp.id) ?? []
+          return (
+            <View key={exp.id} wrap={false}>
+              <View style={s.rowJustify}>
+                <Text style={s.titleLeft}>{exp.company}</Text>
+                <Text style={s.titleRight}>{exp.dates}</Text>
+              </View>
+              <View style={s.roleLine}>
+                <Text style={s.roleLeft}>{exp.role}</Text>
+              </View>
+              {expBullets.map((b, i) => (
+                <View key={i} style={s.bulletRow}>
+                  <Text style={s.bulletDot}>•</Text>
+                  <Text style={s.bulletText}>{b.tailored}</Text>
+                </View>
+              ))}
             </View>
-            {(byExp.get(exp.id) ?? []).map((b, i) => (
-              <Text key={i} style={s.bullet}>
-                • {b.tailored}
-              </Text>
-            ))}
-          </View>
-        ))}
+          )
+        })}
 
+        {/* Skills */}
         {skeleton.skills.length > 0 && (
           <>
             <Text style={s.section}>Skills</Text>
-            <Text style={s.skillsLine}>{skeleton.skills.join(' · ')}</Text>
+            <Text style={s.skillsLine}>{skeleton.skills.join('  •  ')}</Text>
           </>
         )}
 
+        {/* Education */}
         {skeleton.education.length > 0 && (
           <>
             <Text style={s.section}>Education</Text>
             {skeleton.education.map((e, i) => (
-              <View key={i} style={s.eduRow}>
-                <Text>
+              <View key={i} style={s.rowJustify}>
+                <Text style={s.titleLeft}>
                   {e.school}
-                  {e.degree ? ` — ${e.degree}` : ''}
+                  {e.degree ? <Text style={s.roleLeft}> — {e.degree}</Text> : null}
                 </Text>
-                {e.dates && <Text style={s.expDates}>{e.dates}</Text>}
+                {e.dates ? <Text style={s.titleRight}>{e.dates}</Text> : null}
               </View>
             ))}
           </>

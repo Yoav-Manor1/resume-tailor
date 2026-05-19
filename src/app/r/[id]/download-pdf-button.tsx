@@ -24,10 +24,7 @@ export function DownloadPdfButton({ id }: { id: string }) {
     window.location.href = url
   }
   return (
-    <div className="mt-12 flex flex-wrap items-center justify-between gap-4 border-t border-neutral-200 pt-6">
-      <p className="text-xs text-neutral-500">
-        Bullets are yours to copy. Need a clean file?
-      </p>
+    <div className="flex flex-col items-end">
       <button
         onClick={onClick}
         disabled={busy}
@@ -73,7 +70,9 @@ export function DownloadPdfButton({ id }: { id: string }) {
           </>
         )}
       </button>
-      {err && <p className="w-full text-sm text-red-700">{err}</p>}
+      {err && (
+        <p className="mt-2 max-w-xs text-right text-xs text-red-700">{err}</p>
+      )}
     </div>
   )
 }
