@@ -15,7 +15,30 @@ function client() {
 // Zod v4 ships a native JSON Schema generator. Use it directly — we previously
 // tried zod-to-json-schema with target:'openAi', which returns a broken $ref
 // stub for v4 schemas.
-const tailoredJsonSchema = z.toJSONSchema(TailoredOutput) as Record<string, unknown>
+//
+// OpenAI's `strict: true` structured-outputs mode demands that every property
+// in every object appear in `required`, and that `additionalProperties: false`
+// be set explicitly. Zod's nullish fields get omitted from `required` — so we
+// walk the generated schema and force-include them.
+function hardenForOpenAi(node: unknown): unknown {
+  if (Array.isArray(node)) return node.map(hardenForOpenAi)
+  if (node && typeof node === 'object') {
+    const obj = node as Record<string, unknown>
+    if (obj.type === 'object' && obj.properties && typeof obj.properties === 'object') {
+      const props = obj.properties as Record<string, unknown>
+      obj.required = Object.keys(props)
+      obj.additionalProperties = false
+      for (const k of Object.keys(props)) props[k] = hardenForOpenAi(props[k])
+      return obj
+    }
+    for (const k of Object.keys(obj)) obj[k] = hardenForOpenAi(obj[k])
+  }
+  return node
+}
+
+const tailoredJsonSchema = hardenForOpenAi(
+  z.toJSONSchema(TailoredOutput),
+) as Record<string, unknown>
 
 export interface TailorArgs extends BuildPromptArgs {
   model?: string
