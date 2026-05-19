@@ -33,9 +33,13 @@ export async function POST(
   let pdf: Buffer
   try {
     pdf = await renderTailoredPdf(tailored)
-  } catch {
+  } catch (e) {
+    console.error('[pdf route] renderTailoredPdf failed:', e)
     return NextResponse.json(
-      { error: 'render_failed', message: ERROR_MESSAGES.render_failed },
+      {
+        error: 'render_failed',
+        message: `${ERROR_MESSAGES.render_failed} (${(e as Error).message})`,
+      },
       { status: 500 },
     )
   }

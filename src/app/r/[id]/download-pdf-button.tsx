@@ -9,7 +9,14 @@ export function DownloadPdfButton({ id }: { id: string }) {
     setErr(null)
     const res = await fetch(`/api/tailorings/${id}/pdf`, { method: 'POST' })
     if (!res.ok) {
-      setErr('PDF generation failed.')
+      let msg = 'PDF generation failed.'
+      try {
+        const body = (await res.json()) as { message?: string }
+        if (body.message) msg = body.message
+      } catch {
+        /* response wasn't JSON */
+      }
+      setErr(msg)
       setBusy(false)
       return
     }

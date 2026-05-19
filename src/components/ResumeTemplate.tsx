@@ -1,33 +1,22 @@
-import { Document, Page, Text, View, StyleSheet, Font } from '@react-pdf/renderer'
+import { Document, Page, Text, View, StyleSheet } from '@react-pdf/renderer'
 import type { Bullet, ResumeSkeleton } from '@/lib/schema'
 
-Font.register({
-  family: 'Inter',
-  fonts: [
-    {
-      src: 'https://fonts.gstatic.com/s/inter/v13/UcCO3FwrK3iLTeHuS_fvQtMwCp50KnMa1ZL7.woff',
-    },
-    {
-      src: 'https://fonts.gstatic.com/s/inter/v13/UcCO3FwrK3iLTeHuS_fvQtMwCp50KnMa2JL7SUc.woff',
-      fontWeight: 700,
-    },
-  ],
-})
-
+// Use react-pdf's bundled Helvetica — no external font fetch at render time,
+// so PDF generation works fully offline and never fails on network hiccups.
 const s = StyleSheet.create({
-  page: { padding: 48, fontFamily: 'Inter', fontSize: 10, color: '#111' },
-  name: { fontSize: 22, fontWeight: 700 },
+  page: { padding: 48, fontFamily: 'Helvetica', fontSize: 10, color: '#111' },
+  name: { fontSize: 22, fontFamily: 'Helvetica-Bold' },
   contact: { fontSize: 10, color: '#555', marginTop: 4 },
   section: {
     fontSize: 11,
-    fontWeight: 700,
+    fontFamily: 'Helvetica-Bold',
     marginTop: 18,
     marginBottom: 6,
     textTransform: 'uppercase',
     letterSpacing: 1,
   },
   expRow: { flexDirection: 'row', justifyContent: 'space-between', marginTop: 8 },
-  expName: { fontSize: 11, fontWeight: 700 },
+  expName: { fontSize: 11, fontFamily: 'Helvetica-Bold' },
   expDates: { fontSize: 10, color: '#555' },
   bullet: { marginTop: 3, marginLeft: 10 },
   summary: { marginTop: 4, lineHeight: 1.4 },
