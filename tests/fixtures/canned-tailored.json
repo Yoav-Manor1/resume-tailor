@@ -1,0 +1,38 @@
+{
+  "job_title": "Senior Backend Engineer",
+  "job_company": "Acme Co",
+  "match_score": 82,
+  "matched_keywords": ["Go", "Kubernetes", "Postgres", "gRPC"],
+  "missing_keywords": ["Kafka"],
+  "bullets": [
+    {
+      "experience_id": "exp_1",
+      "original": "Built backend services in Python.",
+      "tailored": "Built Go backend services on Kubernetes, exposing gRPC APIs backed by Postgres.",
+      "matched_keywords": ["Go", "Kubernetes", "gRPC", "Postgres"]
+    },
+    {
+      "experience_id": "exp_1",
+      "original": "Worked on the data pipeline.",
+      "tailored": "Worked on the data pipeline; designed Postgres schemas for high-write workloads.",
+      "matched_keywords": ["Postgres"]
+    }
+  ],
+  "resume_skeleton": {
+    "name": "Jane Doe",
+    "contact": {
+      "email": "jane@example.com",
+      "phone": "+1-555-0100",
+      "location": "Brooklyn, NY",
+      "links": ["linkedin.com/in/janedoe"]
+    },
+    "summary": "Backend engineer with 6 years of experience building distributed systems.",
+    "experience": [
+      { "id": "exp_1", "company": "Foo Corp", "role": "Senior Engineer", "dates": "2022–Present" }
+    ],
+    "skills": ["Go", "Python", "Postgres", "Kubernetes", "gRPC"],
+    "education": [
+      { "school": "State U", "degree": "B.S. Computer Science", "dates": "2014–2018" }
+    ]
+  }
+}
