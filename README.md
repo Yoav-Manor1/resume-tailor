@@ -1,6 +1,6 @@
 # Resume Tailor
 
-Upload your resume, paste a job link, and get keyword-optimized bullet rewrites in about 30 seconds — without inventing experience you don't have.
+Upload your resume, paste a job link, and get keyword-optimized bullet rewrites in about 30 seconds, without inventing experience you don't have.
 
 The app pulls the job description, compares it against your resume, and rewrites your bullets to match the language and keywords the employer is looking for. You can copy the rewritten bullets straight into your existing resume or export a tailored PDF.
 
