@@ -20,6 +20,8 @@ The app pulls the job description, compares it against your resume, and rewrites
 
 ![Side-by-side bullet diff](docs/screenshots/bullet-diff.png)
 
+*Screenshots use a sample resume, not real personal experience.*
+
 ## Tech stack
 
 - **Next.js 15** (App Router) + **React 19**
