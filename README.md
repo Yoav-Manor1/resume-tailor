@@ -4,6 +4,22 @@ Upload your resume, paste a job link, and get keyword-optimized bullet rewrites 
 
 The app pulls the job description, compares it against your resume, and rewrites your bullets to match the language and keywords the employer is looking for. You can copy the rewritten bullets straight into your existing resume or export a tailored PDF.
 
+![Landing page](docs/screenshots/landing.png)
+
+## How it works
+
+**1. Drop your resume and paste a job link.** Resume goes in as a PDF; the JD can be a URL (fetched server-side) or pasted text.
+
+![Upload step](docs/screenshots/upload.png)
+
+**2. See how well you already match.** The app extracts the keywords the employer cares about and scores your existing resume against them.
+
+![Match score and keywords](docs/screenshots/match-score.png)
+
+**3. Get rewritten bullets, side-by-side.** Each bullet is rewritten to mirror the job's vocabulary, with matched keywords highlighted so you can see exactly what changed.
+
+![Side-by-side bullet diff](docs/screenshots/bullet-diff.png)
+
 ## Tech stack
 
 - **Next.js 15** (App Router) + **React 19**
